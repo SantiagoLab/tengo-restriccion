@@ -60,7 +60,8 @@ describe('userController', () => {
         request(app.listen())
           .get('/unsubscribe?email=' + user.email + '&token=' + user.token )
           .expect(302)
-          .expect('Redirecting to <a href="/unsubscribe.html">/unsubscribe.html</a>.')
+          .expect('Redirecting to <a href="/unsubscribe-success.html">' +
+                  '/unsubscribe-success.html</a>.')
           .end(done);
       });
     });

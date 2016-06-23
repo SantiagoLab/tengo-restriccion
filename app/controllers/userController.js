@@ -62,7 +62,7 @@ export function* unsubscribe(){
     }
 
     this.status = 200;
-    this.redirect('/unsubscribe.html');
+    this.redirect('/unsubscribe-success.html');
   }
   catch(error){
     this.status = 400;
