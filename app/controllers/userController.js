@@ -1,6 +1,7 @@
 import * as User from '../models/User';
 import {log} from '../modules/logger';
-import {addWelcomeEmailJob} from '../jobs/welcomeEmailJob';
+// import {addWelcomeEmailJob} from '../jobs/welcomeEmailJob';
+import {sendWelcomeEmail} from '../modules/mailSender';
 import {__PRODUCTION__} from '../config/envs';
 
 export function* create(){
@@ -11,7 +12,17 @@ export function* create(){
     const user = yield User.create(query);
 
     // Send welcome email
-    if (__PRODUCTION__) { addWelcomeEmailJob(user); }
+    if (__PRODUCTION__) {
+      // this job can get in a loop, disabling until we find a solution
+      // addWelcomeEmailJob(user);
+      sendWelcomeEmail(user)
+        .then(result => {
+          log.info({'sendWelcomeEmail': {status: 'complete', result }});
+        })
+        .catch(err => {
+          log.error({'sendWelcomeEmail': {status: 'failed', error: err }});
+        });
+    }
 
     this.status = 201;
     this.body = user;
