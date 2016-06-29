@@ -8,11 +8,11 @@ import {compose, map, filter, trim, split,
         replace, test, ifElse, always, not, anyPass} from 'ramda';
 import flattenTime from '../utils/flattenTime';
 
-const noAplicaPattern = /^.*\b(\d{1,2}) de .*:.*? No aplica$/i;
-const noRigePattern = /^.*\b(\d{1,2}) de .*:.*? No Rige$/i;
+const noAplicaPattern = /^.*\b(\d{1,2}) de .*:[^\d]*No aplica$/i;
+const noRigePattern = /^.*\b(\d{1,2}) de .*:[^\d]* No Rige$/i;
 const sinRestriccionPattern = /^.*\b(\d{1,2}) de .*:Sin restricción$/i;
 const expectedPattern =
-            /^.*\b(\d{1,2}) de .*:.*? sin sello verde.*? \d\s?-\s?.*\d(, con sello verde \d-.*\d)?$/i;
+            /^.*\b(\d{1,2}) de .*:.*? sin sello verde.*? \d\s?-\s?.*\d(\s?, con sello verde (\d-.*\d|No aplica))?$/i;
 
 
 /**
@@ -62,8 +62,8 @@ export function parseNumerosRestriccion(jsonArray) {
   ];
 
   const parseSinSello =
-    ifElse( anyPass(exceptionsPredicates),
-      always([]), compose(parseNumbers, sinSelloRegex) );
+    ifElse(anyPass(exceptionsPredicates),
+      always([]), compose(parseNumbers, sinSelloRegex));
 
 
   const parseConSello =

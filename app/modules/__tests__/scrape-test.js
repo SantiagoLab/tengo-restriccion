@@ -23,6 +23,10 @@ describe('scrape', () => {
     const bug1 = ['Sábado 19 de Julio: sin sello verde  1-2', 'Alerta Ambiental'];
     const bug2 = ['Martes 18 de Julio:  sin sello verde 9-0-1-2', 'Restricción Vehicular'];
     const bug3 = ['Domingo 12 de Junio: sin sello verde  1 - 2','Alerta Ambiental'];
+    const bug4 = [
+      'Miercoles 27 de Junio: sin sello verde 1-2-3-4 , con sello verde No aplica',
+      'Alerta Ambiental'
+    ];
 
     const parseNumerosRestriccion = scrape.parseNumerosRestriccion;
 
@@ -36,6 +40,7 @@ describe('scrape', () => {
     const numerosBug1           = parseNumerosRestriccion(bug1);
     const numerosBug2           = parseNumerosRestriccion(bug2);
     const numerosBug3           = parseNumerosRestriccion(bug3);
+    const numerosBug4           = parseNumerosRestriccion(bug4);
     const numerosSinRestriccion = parseNumerosRestriccion(sinRestriccion);
 
     // Make sure that the day is correct, but we 'ignore' the rest,
@@ -49,6 +54,7 @@ describe('scrape', () => {
     const fechaBug1           = new Date((new Date(numerosBug1.fecha.getTime())).setDate(19));
     const fechaBug2           = new Date((new Date(numerosBug2.fecha.getTime())).setDate(18));
     const fechaBug3           = new Date((new Date(numerosBug2.fecha.getTime())).setDate(12));
+    const fechaBug4           = new Date((new Date(numerosBug2.fecha.getTime())).setDate(27));
     const fechaSinRestriccion = new Date((new Date(numerosSinRestriccion.fecha.getTime())).setDate(27));
 
     it('should return expected result for Emergencia', () => {
@@ -266,6 +272,29 @@ describe('scrape', () => {
           estatus: 'Restricción Vehicular',
           numeros: {
             conSello: [],
+            sinSello: [3, 4]
+          }
+        });
+    });
+
+
+    it('should return expected result for Bug4 case', () => {
+      numerosBug4
+        .should.be.deep.equal({
+          fecha  : fechaBug4,
+          estatus: 'Alerta Ambiental',
+          numeros: {
+            conSello: [],
+            sinSello: [1, 2, 3, 4]
+          }
+        });
+
+      numerosBug4
+        .should.not.be.deep.equal({
+          fecha  : fechaBug4,
+          estatus: 'Restricción Vehicular',
+          numeros: {
+            conSello: [1, 2],
             sinSello: [3, 4]
           }
         });
