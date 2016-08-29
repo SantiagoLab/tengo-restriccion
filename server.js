@@ -77,7 +77,8 @@ if (!__PRODUCTION__) {
 app.use(route.get('/', index));
 
 /* Restriction day */
-app.use(route.get('/restriction_day', restrictionDayController.latest));
+// Sadly someone abused this endpoint so I'll turn it off until someone adds some rate limiting
+// app.use(route.get('/restriction_day', restrictionDayController.latest));
 
 /* Users */
 app.use(route.put('/users', userController.create));
